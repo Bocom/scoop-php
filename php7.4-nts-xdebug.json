@@ -17,7 +17,7 @@
         }
     },
     "post_install": [
-        "$phpconfd = \"$persist_dir\\..\\php-7.4-nts\\cli\\conf.d\"",
+        "$phpconfd = \"$persist_dir\\..\\php7.4-nts\\cli\\conf.d\"",
         "$ini = \"zend_extension=$dir\\php_xdebug.dll`n[xdebug]`n# xdebug.remote_enable=on`n# xdebug.remote_autostart=on`n# xdebug.remote_connect_back=on\"",
         "if(!(test-path $phpconfd\\xdebug.ini)) {",
         "    Write-Output \"Enabling extension $(Convert-Path $phpconfd)\\xdebug.ini\"",
