@@ -1,13 +1,10 @@
 {
-    "version": "8.0.26",
+    "homepage": "https://windows.php.net/downloads/releases/",
     "description": "A popular general-purpose scripting language that is especially suited to web development. (version 8.0, non-thread safe)",
-    "homepage": "https://windows.php.net/",
+    "version": "8.0.26",
     "license": {
         "identifier": "PHP-3.01",
         "url": "https://secure.php.net/license/"
-    },
-    "suggest": {
-        "vcredist": "extras/vcredist2022"
     },
     "architecture": {
         "64bit": {
@@ -19,29 +16,33 @@
             "hash": "20216020e03e22a231c5ca08f252d9cfc0e372459c0149f2814219b1a297dfd3"
         }
     },
-    "pre_install": [
-        "# Create directory for custom PHP configuration",
-        "if (!(Test-Path \"$dir\\cli\\conf.d\")) {",
-        "    (New-Item -Type directory \"$dir\\cli\\conf.d\") | Out-Null",
-        "}"
-    ],
-    "post_install": [
-        "# Enable extensions to be found in installation-relative folder (the default is to search C:/php)",
-        "(Get-Content \"$dir\\cli\\php.ini\") | % { $_ -replace ';\\s?(extension_dir = \"ext\")', '$1' } | Set-Content \"$dir\\cli\\php.ini\""
-    ],
     "bin": [
         "php.exe",
-        "php-cgi.exe",
-        "phpdbg.exe"
+        "php-cgi.exe"
     ],
-    "persist": [
-        "cli",
-        [
-            "php.ini-production",
-            "cli\\php.ini"
-        ]
-    ],
+    "persist": "conf.d",
     "env_set": {
-        "PHP_INI_SCAN_DIR": "$dir\\cli;$dir\\cli\\conf.d;"
+        "PHP_INI_SCAN_DIR": "$persist_dir;$dir\\conf.d;"
+    },
+    "post_install": "if($bucket) { . \"$(Find-BucketDirectory $bucket\\bin\\postinstall.ps1)\" -dir \"$dir\" }",
+    "checkver": {
+        "url": "https://windows.php.net/download/",
+        "re": "<h3 id=\"php-8.0\".*?>.*?\\(([\\d.-]+)\\)</h3>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://windows.php.net/downloads/releases/php-$version-nts-Win32-vs16-x64.zip"
+            },
+            "32bit": {
+                "url": "https://windows.php.net/downloads/releases/php-$version-nts-Win32-vs16-x86.zip"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/sha256sum.txt"
+        }
+    },
+    "suggest": {
+        "vcredist": "extras/vcredist2019"
     }
 }
